@@ -2,7 +2,7 @@
 
 GRID_SIZE = 40
 DIMENSION = 16
-ROOMID = "22021"
+ROOMID = 22021
 URL = "https://api.live.bilibili.com/xlive/web-room/v1/dM/gethistory"
 
 # rgb regex !1-16,1-16_0-255,0-255,0-255

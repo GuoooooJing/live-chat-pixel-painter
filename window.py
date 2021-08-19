@@ -9,6 +9,7 @@ from args import COLOR_BLOCK_SIZE, COLOR_X, DIMENSION, GRID_SIZE
 import sys
 from color_block import ColorBlock
 from bili_listener import Listener
+from bili_chat import Spider
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -68,6 +69,7 @@ class MainWindow(QMainWindow):
         print("button clicked")
         self.new_painting()
 
+
     def new_painting(self):
         print("Start listening for the chat")
         self.worker = UpdateChatThread()
@@ -81,19 +83,32 @@ class MainWindow(QMainWindow):
             self.canvas.paint_block(x-1, y-1, color)
     
 
+
 class UpdateChatThread(QtCore.QThread):
     command = QtCore.pyqtSignal(list)
     def __init__(self) -> None:
         super(UpdateChatThread, self).__init__()
-        self.bili_listener = Listener()
+        # self.bili_listener = Listener()
+        self.chat = Spider()
 
     def run(self):
         while True:
-            time.sleep(5)
             # res = self.bili_listener.get_command(input("input command with code 2 format\n"), 2)
             # self.command.emit(res)
-            res = self.bili_listener.new_chat()
+            res = self.chat.get_msg()
+            if not res:
+                continue
             self.command.emit(res)
+            # try:
+            #     msg_bytes = self.chat.ws.recv()
+            #     print(msg_bytes)
+            #     msg = self.chat._handle_message(msg_bytes)
+            #     print("msg return:", msg)
+            #     if msg:  
+            #         self.command.emit(msg)
+            # except Exception as e:
+            #     print("Get message failed")
+            #     pass
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
